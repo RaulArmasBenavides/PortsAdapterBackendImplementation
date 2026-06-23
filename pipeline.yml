@@ -1,0 +1,56 @@
+trigger:
+- main
+variables:
+    - name: dockerImage
+      value: 'fullhendrix/portsadapterbackendimplementation:1.$(Build.BuildId).0'
+pool:
+  vmImage: ubuntu-latest
+steps:
+- task: UseDotNet@2
+  displayName: 'Instalacion de SDK'
+  inputs:
+    version: 8.x
+    performMultiLevelLookup: true
+- task: DotNetCoreCLI@2
+  displayName: 'Ejecucion de pruebas unitarias'
+  inputs:
+    command: test
+    projects: '**/CompanyName.DDD.Test.csproj'
+- task: replacetokens@6
+  displayName: 'Reemplazo de variables'
+  inputs:
+    sources: 'kubernete-deployment.yaml'
+    telemetryOptout: true
+- task: DockerInstaller@0
+  displayName: 'Docker'
+  inputs:
+    dockerVersion: '20.10.7'
+- task: KubectlInstaller@0
+  displayName: 'Kubectl'
+  inputs:
+    kubectlVersion: 'latest'
+- task: Docker@2
+  displayName: 'Construir y publicar imagen'
+  inputs:
+    containerRegistry: 'dockerhub-fullhendrix'
+    repository: 'fullhendrix/portsadapterbackendimplementation'
+    command: 'buildAndPush'
+    Dockerfile: '**/dockerfile'
+    tags: '1.$(Build.BuildId).0'
+- task: Docker@2
+  displayName: 'Construir y publicar imagen latest'
+  inputs:
+    containerRegistry: 'dockerhub-fullhendrix'
+    repository: 'fullhendrix/portsadapterbackendimplementation'
+    command: 'buildAndPush'
+    Dockerfile: '**/dockerfile'
+    tags: 'latest'
+- task: Kubernetes@1
+  displayName: 'Despliegue en kubernetes'
+  inputs:
+    connectionType: 'Kubernetes Service Connection'
+    kubernetesServiceEndpoint: 'k8s-digitalocean'
+    command: 'apply'
+    arguments: '-f kubernete-deployment.yaml'
+    secretType: 'dockerRegistry'
+    containerRegistryType: 'Azure Container Registry'

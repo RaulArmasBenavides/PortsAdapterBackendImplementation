@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-portsadapterbackendimplementation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-portsadapterbackendimplementation
+  template:
+    metadata:
+      labels:
+        app: api-portsadapterbackendimplementation
+    spec:
+      containers:
+      - name: api-portsadapterbackendimplementation
+        image: #{dockerImage}#
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - mountPath: /app/appsettings
+          name: appsettings
+      volumes:
+        - name: appsettings
+          configMap:
+            name: appsettings-json
+            items:
+              - key: appsettings.json
+                path: appsettings.json
