@@ -1,6 +1,8 @@
-﻿namespace CompanyName.DDD.Domain.TaxTypeAggregate.Domain
+﻿using CompanyName.DDD.Domain.Common.Audit;
+
+namespace CompanyName.DDD.Domain.TaxTypeAggregate.Domain
 {
-    public class TaxType
+    public class TaxType : AuditableEntity
     {
         public int TaxTypeCode { get; private set; }
         public string TaxTypeName { get; private set; }

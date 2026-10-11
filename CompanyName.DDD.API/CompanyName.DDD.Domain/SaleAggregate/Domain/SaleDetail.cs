@@ -1,6 +1,8 @@
-﻿namespace CompanyName.DDD.Domain.SaleAggregate.Domain
+﻿using CompanyName.DDD.Domain.Common.Audit;
+
+namespace CompanyName.DDD.Domain.SaleAggregate.Domain
 {
-    public class SaleDetail
+    public class SaleDetail : AuditableEntity
     {
         public Guid SaleCode { get; private set; }
         public Guid SaleDetailCode { get; private set; }

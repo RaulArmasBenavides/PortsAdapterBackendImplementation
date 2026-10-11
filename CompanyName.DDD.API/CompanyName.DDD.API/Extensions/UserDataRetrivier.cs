@@ -7,7 +7,7 @@ namespace CompanyName.DDD.API.Extensions
         public string UserName { get; private set; }
         public UserDataRetriever(string autorizationHeader)
         {
-            var jwtSecurityToken = new JwtSecurityTokenHandler().ReadJwtToken(autorizationHeader[7..^1]);
+            var jwtSecurityToken = new JwtSecurityTokenHandler().ReadJwtToken(autorizationHeader[7..]);
             UserName = jwtSecurityToken.Claims.Single(x => x.Type.Equals("preferred_username")).Value;
             UserCode = jwtSecurityToken.Claims.Single(x => x.Type.Equals("sid")).Value;
         }

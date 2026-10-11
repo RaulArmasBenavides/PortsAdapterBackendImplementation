@@ -140,3 +140,10 @@ CompanyName.DDD.Domain/
     ├── Cache/               # Caching abstractions
     └── Log/                 # Logging abstractions
 ```
+
+## Auditing (mandatory)
+
+- Every persisted aggregate entity inherits from `CompanyName.DDD.Domain.Common.Audit.AuditableEntity` (`CreatedAt`, `CreatedBy`, `UpdatedAt`, `UpdatedBy`).
+- Do not assign audit fields by hand: `Context.SaveChanges` fills them using `ICurrentUserService`.
+- A new entity needs its columns in the database: add an idempotent script under `CompanyName.DDD.API/Scripts/` (see `001_audit_columns.sql`).
+- Secrets (the connection string) are set with `ConnectionStrings__Operations`; never in `appsettings`.

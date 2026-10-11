@@ -5,7 +5,7 @@ using CompanyName.DDD.Domain.KardexAggregate.Application.Interface;
 using CompanyName.DDD.Domain.ProductStockAggregate.Application.DTO;
 using CompanyName.DDD.Domain.ProductStockAggregate.Application.Interface;
 using CompanyName.DDD.Domain.ProductStockAggregate.Domain;
-namespace CompanyName.DDD.Domain.ProdProductStockAggregateuctStock.Application
+namespace CompanyName.DDD.Domain.ProductStockAggregate.Application
 {
     public class ProductStockAggregate(IProductStockRepository repository, IKardexAggregate kardex, ILog log) : IProductStockAggregate
     {

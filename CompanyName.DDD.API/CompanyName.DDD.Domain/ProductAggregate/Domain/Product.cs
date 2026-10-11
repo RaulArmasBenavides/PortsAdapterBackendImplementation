@@ -1,6 +1,8 @@
-﻿namespace CompanyName.DDD.Domain.ProductAggregate.Domain
+﻿using CompanyName.DDD.Domain.Common.Audit;
+
+namespace CompanyName.DDD.Domain.ProductAggregate.Domain
 {
-    public class Product
+    public class Product : AuditableEntity
     {
         public Guid ProductCode { get; private set; }
         public string ProductName { get; private set; }

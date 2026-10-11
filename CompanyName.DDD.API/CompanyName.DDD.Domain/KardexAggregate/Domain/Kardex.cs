@@ -1,6 +1,8 @@
-﻿namespace CompanyName.DDD.Domain.KardexAggregate.Domain
+﻿using CompanyName.DDD.Domain.Common.Audit;
+
+namespace CompanyName.DDD.Domain.KardexAggregate.Domain
 {
-    public class Kardex
+    public class Kardex : AuditableEntity
     {
         public Guid KardexCode { get; private set; }
         public DateTime KardexDate { get; private set; }

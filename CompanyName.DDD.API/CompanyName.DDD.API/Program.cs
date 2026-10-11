@@ -9,6 +9,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Configuration.AddJsonFile("appsettings/appsettings.json", optional: false, reloadOnChange: true);
+// Environment variables must win over the JSON file, so they are added again after it.
+builder.Configuration.AddEnvironmentVariables();
+
+// Secretos fuera del repositorio: ConnectionStrings__Operations (variable de entorno o User Secrets).
+if (string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("Operations")))
+{
+    throw new InvalidOperationException("ConnectionStrings:Operations is not configured. Set it with user secrets or the variable ConnectionStrings__Operations.");
+}
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -19,7 +27,7 @@ builder.Services.AddAuthentication(options =>
     o.Audience = builder.Configuration.GetSection("Auth").GetSection("Audience").Value;
     o.RequireHttpsMetadata = false;
 });
-Console.WriteLine($"Authority: {builder.Configuration.GetSection("Auth").GetSection("Authority").Value} ");
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "local", policy =>
@@ -51,10 +59,9 @@ if (environment.Equals("Local"))
     app.UseSwaggerUI();
 }
 app.UseHttpsRedirection();
-app.MapControllers().RequireAuthorization();
 app.UseCors("local");
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
-Console.WriteLine("Server started");
+app.MapControllers().RequireAuthorization();
 app.Run();

@@ -1,11 +1,12 @@
 ﻿using CompanyName.DDD.Domain.Common.Cache;
+using CompanyName.DDD.Domain.Common.Audit;
 using CompanyName.DDD.Domain.Common.Cache.Implementation;
 using CompanyName.DDD.Domain.Common.Log;
 using CompanyName.DDD.Domain.Common.Log.LogImplementations;
 using CompanyName.DDD.Domain.KardexAggregate.Application;
 using CompanyName.DDD.Domain.KardexAggregate.Application.Interface;
 using CompanyName.DDD.Domain.KardexAggregate.Infrastructure.SQLServer;
-using CompanyName.DDD.Domain.ProdProductStockAggregateuctStock.Application;
+using CompanyName.DDD.Domain.ProductStockAggregate.Application;
 using CompanyName.DDD.Domain.ProductAggregate.Application;
 using CompanyName.DDD.Domain.ProductAggregate.Application.Interfaces;
 using CompanyName.DDD.Domain.ProductAggregate.Infrastructure;
@@ -34,6 +35,8 @@ namespace CompanyName.DDD.API.Extensions
             services.AddTransient<IProductAggregate, ProductAggregate>();
             services.AddTransient<ProductRepository, ProductRepositorySQLServer>();
             services.AddTransient<ILog, StandartOuputLog>();
+            services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddTransient<IGenericCache, InMemoryCache>();
             return services;
         }
